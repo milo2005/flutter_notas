@@ -1,13 +1,48 @@
 import 'package:flutter/material.dart';
 
 class MainPage extends StatelessWidget {
-
   static const ROUTE = '/main';
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        child: Icon(Icons.add),
+      ),
+      appBar: AppBar(
+        title: Text("Mis Notas"),
+      ),
+      body: ListView.builder(itemCount: 10, itemBuilder: (ctx, idx) => _itemNote(ctx)),
+    );
+  }
 
+  Widget _itemNote(BuildContext context) {
+    return Card(
+      child: Stack(
+        children: <Widget>[
+          Align(
+            alignment: Alignment.topRight,
+            child: IconButton(
+                icon: Icon(Icons.clear),
+                onPressed: () {},
+              ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              children: <Widget>[
+                Text('Titulo',style: Theme.of(context).textTheme.title,),
+                Text('Fecha',style: Theme.of(context).textTheme.caption,),
+                Padding(
+                  padding: EdgeInsets.only(top: 10),
+                  child: Text('Descripcion ...', style: Theme.of(context).textTheme.body1,),
+                )
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
