@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:notas/pages/login/login_bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
 
 class LoginPage extends StatefulWidget {
   static const ROUTE = '/';
@@ -18,12 +21,15 @@ class _LoginPageState extends State<LoginPage> {
   final _emailFocus = FocusNode();
   final _passFocus = FocusNode();
 
+  final LoginBloc _bloc = LoginBloc();
+
   @override
   void dispose() {
     _emailCtrl.dispose();
     _passCtrl.dispose();
     _emailFocus.dispose();
     _passFocus.dispose();
+    _bloc.dispose();
     super.dispose();
   }
 
@@ -79,14 +85,31 @@ class _LoginPageState extends State<LoginPage> {
                 ],
               ),
             ),
-            Spacer(),
-            Align(
-              alignment: Alignment.centerRight,
-              child: RaisedButton(
-                color: Theme.of(context).accentColor,
-                textColor: Colors.white,
-                onPressed: _login,
-                child: Text('Entrar'),
+            Expanded(
+              child: BlocBuilder(
+                bloc: _bloc,
+                builder: (ctx, state){
+                  return Column(
+                    children: <Widget>[
+                      if(state == LoginState.Error)
+                      Text("Usuario o Contraseña Erroneos",
+                        style: TextStyle(color: Colors.red),
+                      ),
+                      Spacer(),
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: state != LoginState.Loading
+                            ? RaisedButton(
+                              color: Theme.of(context).accentColor,
+                              textColor: Colors.white,
+                              onPressed: _login,
+                              child: Text('Entrar'),
+                            )
+                            : CircularProgressIndicator(),
+                      ),
+                    ],
+                  );
+                },
               ),
             ),
           ],
@@ -124,7 +147,7 @@ class _LoginPageState extends State<LoginPage> {
 
   void _login(){
     if(_formKey.currentState.validate()){
-      // Se hace el Login
+      _bloc.dispatch(LoginEvent(_emailCtrl.text, _passCtrl.text));
     }else{
       setState((){
         _autovalidate = true;
