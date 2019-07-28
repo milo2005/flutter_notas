@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:notas/pages/login/login_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:notas/pages/main/MainPage.dart';
+import 'package:notas/util/widget_util.dart';
 
 
 class LoginPage extends StatefulWidget {
-  static const ROUTE = '/';
+  static const ROUTE = '/login';
 
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -89,6 +91,13 @@ class _LoginPageState extends State<LoginPage> {
               child: BlocBuilder(
                 bloc: _bloc,
                 builder: (ctx, state){
+
+                  if(state == LoginState.Success){
+                    onDidWidgetLoaded((){
+                      Navigator.pushReplacementNamed(context, MainPage.ROUTE);
+                    });
+                  }
+
                   return Column(
                     children: <Widget>[
                       if(state == LoginState.Error)

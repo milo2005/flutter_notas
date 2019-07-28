@@ -31,6 +31,7 @@ class MainPage extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text('Titulo',style: Theme.of(context).textTheme.title,),
                 Text('Fecha',style: Theme.of(context).textTheme.caption,),
