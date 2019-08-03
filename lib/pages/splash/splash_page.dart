@@ -5,13 +5,14 @@ import 'package:notas/pages/main/main_page.dart';
 import 'package:notas/pages/splash/splash_bloc.dart';
 import 'package:notas/util/state_util.dart';
 import 'package:notas/util/widget_util.dart';
+import 'package:dependencies_flutter/dependencies_flutter.dart';
 
 class SplashPage extends StatelessWidget {
   static const ROUTE = '/';
 
   @override
   Widget build(BuildContext context) {
-    SplashBloc _bloc = SplashBloc();
+    SplashBloc _bloc = InjectorWidget.of(context).get();
     return BlocBuilder(
       bloc: _bloc,
       builder: (ctx, state) {

@@ -1,7 +1,9 @@
 import 'package:notas/data/preferences/user_session.dart';
 
 class AuthRepository {
-  UserSession _session = UserSession();
+  UserSession _session;
+
+  AuthRepository(this._session);
 
   Future<bool> isLogged() async {
     return _session.getLogged();
