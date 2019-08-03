@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "961737041874",
+    "firebase_url": "https://notas-540aa.firebaseio.com",
+    "project_id": "notas-540aa",
+    "storage_bucket": "notas-540aa.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:961737041874:android:d0f545096bac56be",
+        "android_client_info": {
+          "package_name": "parque.mobile.notas"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "961737041874-6m52pk525b9gm6jk4hoqahvoue2ajbac.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "parque.mobile.notas",
+            "certificate_hash": "b2efe89b13b6c84263c69842333a5506ddb58f80"
+          }
+        },
+        {
+          "client_id": "961737041874-f75ppec09m2jruq3je6snieim8entopr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDhQUyJp_wV89azHtJ_QDVF0AXEwJEcT2Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "961737041874-f75ppec09m2jruq3je6snieim8entopr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

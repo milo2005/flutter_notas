@@ -31,11 +31,13 @@ dependencies:
   dependencies: ^0.1.5
   dependencies_flutter: ^0.1.6
   #Firebase
-  # firebase_auth: ^0.14.0
-  # cloud_firestore: ^0.12.9
-  # firebase_core: ^0.4.0+8
+  firebase_auth: ^0.14.0
+  cloud_firestore: ^0.12.9
+  firebase_core: ^0.4.0+8
 
 dev_dependencies:
+  build_runner: ^1.0.0
+  json_serializable: ^2.0.0
   flutter_test:
     sdk: flutter
 

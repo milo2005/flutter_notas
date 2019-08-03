@@ -17,6 +17,9 @@ class AuthRepository {
       _session.setLogged(false);
       return false;
     }
+  }
+
+  Future signin(String email, String pass) async{
 
   }
 }
