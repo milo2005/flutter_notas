@@ -1,4 +1,5 @@
 import 'package:notas/data/preferences/user_session.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class AuthRepository {
   UserSession _session;
@@ -9,16 +10,26 @@ class AuthRepository {
     return _session.getLogged();
   }
 
-  Future<bool> login(String email, String pass) async {
-    await Future.delayed(Duration(seconds: 2));
+  Future login(String email, String pass) async {
 
-    if(email =='prueba@email.com' && pass == '123456'){
-      _session.setLogged(true);
-      return true;
-    }else{
-      _session.setLogged(false);
-      return false;
-    }
+    final result = await FirebaseAuth.instance
+        .signInWithEmailAndPassword(email: email, password: pass);
 
+    _prepareSession(email, result.user.uid);
   }
+
+  Future register(String email, String pass) async{
+    final result = await FirebaseAuth.instance
+    .createUserWithEmailAndPassword(email: email, password: pass);
+
+    _prepareSession(email, result.user.uid);
+  }
+
+  _prepareSession(String email, String uid){
+    _session.setEmail(email);
+    _session.setLogged(true);
+    _session.setId(uid);
+  }
+
+
 }
