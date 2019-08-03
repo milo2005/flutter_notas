@@ -1,7 +1,11 @@
 import 'package:dependencies_flutter/dependencies_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:notas/pages/main/main_page.dart';
 import 'package:notas/pages/register/register_bloc.dart';
+import 'package:notas/util/state_util.dart';
 import 'package:notas/util/text_util.dart';
+import 'package:notas/util/widget_util.dart';
 
 class RegisterPage extends StatelessWidget {
   static const ROUTE = '/register';
@@ -104,8 +108,36 @@ class _RegisterFormState extends State<RegisterForm> {
             ],
           ),
         ),
-        Spacer(),
-        _actions(context)
+        Expanded(
+          child: BlocBuilder(
+            bloc: _bloc,
+            builder: (ctx, state){
+
+              if(state is SuccessState){
+                onDidWidgetLoaded((){
+                  Navigator.pushReplacementNamed(context, MainPage.ROUTE);
+                });
+              }
+
+              return Column(
+                children: <Widget>[
+
+                  if(state is ErrorState)
+                    _errorMessage(),
+
+                  Spacer(),
+
+                  if(state is LoadingState)
+                    _loading(),
+
+                  if(!(state is LoadingState))
+                    _actions(context)
+
+                ],
+              );
+            },
+          ),
+        ),
       ],
     );
   }
