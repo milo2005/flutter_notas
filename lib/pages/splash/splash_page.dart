@@ -1,3 +1,4 @@
+import 'package:dependencies_flutter/dependencies_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:notas/pages/login/login_page.dart';
@@ -11,7 +12,7 @@ class SplashPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SplashBloc _bloc = SplashBloc();
+    SplashBloc _bloc = SplashBloc(InjectorWidget.of(context).get());
     return BlocBuilder(
       bloc: _bloc,
       builder: (ctx, state) {

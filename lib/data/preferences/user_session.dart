@@ -21,6 +21,16 @@ class UserSession{
     await pref.setString("email", value);
   }
 
+  Future<String> getId() async{
+    final pref = await getPreferences();
+    return pref.getString("id");
+  }
+
+  void setId(String value) async{
+    final pref = await getPreferences();
+    await pref.setString("id", value);
+  }
+
   Future<bool> getLogged() async{
     final pref = await getPreferences();
     return pref.getBool('logged') ?? false;
@@ -30,5 +40,6 @@ class UserSession{
     final pref = await getPreferences();
     await pref.setBool('logged', value);
   }
+
 
 }
