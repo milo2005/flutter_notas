@@ -13,6 +13,10 @@ class AppTheme{
       display1: TextStyle(
         fontFamily: 'Betty'
       ),
+      display2: TextStyle(
+        fontFamily: 'Betty',
+        color: Color(0xff005975),
+      )
     ),
   );
 }

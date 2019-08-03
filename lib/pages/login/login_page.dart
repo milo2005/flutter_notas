@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:notas/pages/login/login_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:notas/pages/main/MainPage.dart';
+import 'package:notas/pages/main/main_page.dart';
+import 'package:notas/pages/register/register_page.dart';
+import 'package:notas/util/text_util.dart';
 import 'package:notas/util/widget_util.dart';
-
 
 class LoginPage extends StatefulWidget {
   static const ROUTE = '/login';
@@ -13,7 +14,6 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
-
   final _formKey = GlobalKey<FormState>();
   bool _autovalidate = false;
 
@@ -45,7 +45,10 @@ class _LoginPageState extends State<LoginPage> {
             Container(
               width: 150,
               height: 150,
-              margin: EdgeInsets.only(top: 20, bottom: 20,),
+              margin: EdgeInsets.only(
+                top: 20,
+                bottom: 20,
+              ),
               child: Image(
                 image: AssetImage('assets/images/logo.png'),
               ),
@@ -60,26 +63,29 @@ class _LoginPageState extends State<LoginPage> {
               child: Column(
                 children: <Widget>[
                   Padding(
-                    padding: const EdgeInsets.only(top:12.0),
+                    padding: const EdgeInsets.only(top: 12.0),
                     child: TextFormField(
                       controller: _emailCtrl,
                       focusNode: _emailFocus,
-                      validator: _validateEmail,
+                      validator: validateEmail,
                       keyboardType: TextInputType.emailAddress,
-                      decoration: InputDecoration(filled: true, labelText: 'Correo'),
+                      decoration:
+                          InputDecoration(filled: true, labelText: 'Correo'),
                       textInputAction: TextInputAction.next,
-                      onFieldSubmitted: (v){_changeFocus(_emailFocus, _passFocus);},
+                      onFieldSubmitted: (v) {
+                        changeFocus(context, _emailFocus, _passFocus);
+                      },
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(top:12.0),
+                    padding: const EdgeInsets.only(top: 12.0),
                     child: TextFormField(
                       controller: _passCtrl,
                       focusNode: _passFocus,
-                      validator: _validatePass,
+                      validator: validatePass,
                       keyboardType: TextInputType.text,
-                      decoration:
-                          InputDecoration(filled: true, labelText: 'Contraseña'),
+                      decoration: InputDecoration(
+                          filled: true, labelText: 'Contraseña'),
                       textInputAction: TextInputAction.done,
                       obscureText: true,
                     ),
@@ -90,32 +96,50 @@ class _LoginPageState extends State<LoginPage> {
             Expanded(
               child: BlocBuilder(
                 bloc: _bloc,
-                builder: (ctx, state){
-
-                  if(state == LoginState.Success){
-                    onDidWidgetLoaded((){
+                builder: (ctx, state) {
+                  if (state == LoginState.Success) {
+                    onDidWidgetLoaded(() {
                       Navigator.pushReplacementNamed(context, MainPage.ROUTE);
                     });
                   }
 
                   return Column(
                     children: <Widget>[
-                      if(state == LoginState.Error)
-                      Text("Usuario o Contraseña Erroneos",
-                        style: TextStyle(color: Colors.red),
-                      ),
+                      if (state == LoginState.Error)
+                        Text(
+                          "Usuario o Contraseña Erroneos",
+                          style: TextStyle(color: Colors.red),
+                        ),
                       Spacer(),
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: state != LoginState.Loading
-                            ? RaisedButton(
-                              color: Theme.of(context).accentColor,
-                              textColor: Colors.white,
-                              onPressed: _login,
-                              child: Text('Entrar'),
+                      if (state != LoginState.Loading)
+                        Row(
+                          children: <Widget>[
+                            Expanded(
+                              child: FlatButton(
+                                  onPressed: () {
+                                    Navigator.pushNamed(context, RegisterPage.ROUTE);
+                                  },
+                                  child: Text(
+                                    'Registrate',
+                                    style: TextStyle(
+                                        color: Theme.of(context).accentColor),
+                                  )),
+                            ),
+                            Expanded(
+                              child: RaisedButton(
+                                color: Theme.of(context).accentColor,
+                                textColor: Colors.white,
+                                onPressed: _login,
+                                child: Text('Entrar'),
+                              ),
                             )
-                            : CircularProgressIndicator(),
-                      ),
+                          ],
+                        ),
+                      if (state == LoginState.Loading)
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: CircularProgressIndicator(),
+                        ),
                     ],
                   );
                 },
@@ -127,41 +151,13 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  void _changeFocus(FocusNode current, FocusNode request){
-    current.unfocus();
-    FocusScope.of(context).requestFocus(request);
-  }
-
-  String _validateEmail(String value){
-
-    Pattern pattern = r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)";
-    RegExp regex = RegExp(pattern);
-
-    if(value == ''){
-      return 'El email es obligatorio';
-    } else if(!regex.hasMatch(value)){
-      return 'El email tiene mal formato';
-    }
-    return null;
-  }
-
-  String _validatePass(String value){
-    if(value == ''){
-      return 'La contraseña es obligatoria';
-    }else if(value.length < 6){
-      return 'La contraseña debe tener 6 caracteres';
-    }
-    return null;
-  }
-
-  void _login(){
-    if(_formKey.currentState.validate()){
+  void _login() {
+    if (_formKey.currentState.validate()) {
       _bloc.dispatch(LoginEvent(_emailCtrl.text, _passCtrl.text));
-    }else{
-      setState((){
+    } else {
+      setState(() {
         _autovalidate = true;
       });
     }
   }
-
 }

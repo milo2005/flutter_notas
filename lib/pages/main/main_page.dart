@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:notas/pages/add/add_page.dart';
 
 class MainPage extends StatelessWidget {
   static const ROUTE = '/main';
@@ -7,8 +8,10 @@ class MainPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        child: Icon(Icons.add),
+        onPressed: () {
+          Navigator.pushNamed(context, AddPage.ROUTE);
+        },
+        child: Icon(Icons.add, color: Colors.white,),
       ),
       appBar: AppBar(
         title: Text("Mis Notas"),

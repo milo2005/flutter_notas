@@ -1,34 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:notas/pages/login/login_page.dart';
-import 'package:notas/pages/main/MainPage.dart';
-import 'package:notas/pages/splash/SplashBloc.dart';
+import 'package:notas/pages/main/main_page.dart';
+import 'package:notas/pages/splash/splash_bloc.dart';
 import 'package:notas/util/state_util.dart';
 import 'package:notas/util/widget_util.dart';
 
 class SplashPage extends StatelessWidget {
-
   static const ROUTE = '/';
-
-  SplashBloc _bloc;
 
   @override
   Widget build(BuildContext context) {
-    if(_bloc == null){
-      _bloc = SplashBloc();
-    }
+    SplashBloc _bloc = SplashBloc();
     return BlocBuilder(
       bloc: _bloc,
-      builder: (ctx, state){
-
-        if(state is InitialState){
+      builder: (ctx, state) {
+        if (state is InitialState) {
           _bloc.dispatch(0);
         }
 
-        if(state is SuccessState){
-          onDidWidgetLoaded((){
-            Navigator.pushReplacementNamed(context,
-                state.data ? MainPage.ROUTE : LoginPage.ROUTE);
+        if (state is SuccessState) {
+          onDidWidgetLoaded(() {
+            Navigator.pushReplacementNamed(
+                context, state.data ? MainPage.ROUTE : LoginPage.ROUTE);
           });
         }
 
