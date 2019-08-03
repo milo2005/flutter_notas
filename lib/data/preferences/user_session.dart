@@ -11,6 +11,16 @@ class UserSession{
     return _preferences;
   }
 
+  Future<String> getId() async{
+    final pref = await getPreferences();
+    return pref.getString("id");
+  }
+
+  void setId(String value) async{
+    final pref = await getPreferences();
+    await pref.setString("id", value);
+  }
+
   Future<String> getEmail() async{
     final pref = await getPreferences();
     return pref.getString("email");
