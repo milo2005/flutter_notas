@@ -1,6 +1,7 @@
 import 'package:dependencies_flutter/dependencies_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:notas/pages/login/login_bloc.dart';
 import 'package:notas/pages/main/main_page.dart';
 import 'package:notas/pages/register/register_bloc.dart';
 import 'package:notas/util/state_util.dart';
@@ -155,7 +156,9 @@ class _RegisterFormState extends State<RegisterForm> {
           ),
           Expanded(
             child: RaisedButton(
-              onPressed: () {},
+              onPressed: () {
+                _bloc.dispatch(LoginEvent(_emailCtrl.text, _passCtrl.text));
+              },
               child: Text('Crear'),
               color: Theme.of(context).accentColor,
               textColor: Colors.white,

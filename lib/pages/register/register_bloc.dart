@@ -22,7 +22,7 @@ class RegisterBloc extends Bloc<LoginEvent, BaseState>{
       yield LoadingState();
       await _respository.register(event.email, event.password);
       yield SuccessState();
-    } catch (e) {
+    } on Exception catch (e) {
       yield ErrorState();
       await Future.delayed(Duration(microseconds: 1500));
       yield InitialState();
