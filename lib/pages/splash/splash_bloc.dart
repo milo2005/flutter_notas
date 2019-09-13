@@ -4,7 +4,9 @@ import 'package:notas/util/state_util.dart';
 
 class SplashBloc extends Bloc<int, BaseState>{
 
-  AuthRepository _authRepository = AuthRepository();
+  AuthRepository _authRepository;
+
+  SplashBloc(this._authRepository);
 
   @override
   BaseState get initialState => InitialState();

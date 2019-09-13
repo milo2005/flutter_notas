@@ -1,5 +1,12 @@
+import 'package:dependencies_flutter/dependencies_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:notas/pages/login/login_bloc.dart';
+import 'package:notas/pages/main/main_page.dart';
+import 'package:notas/pages/register/register_bloc.dart';
+import 'package:notas/util/state_util.dart';
 import 'package:notas/util/text_util.dart';
+import 'package:notas/util/widget_util.dart';
 
 class RegisterPage extends StatelessWidget {
   static const ROUTE = '/register';
@@ -36,7 +43,6 @@ class RegisterForm extends StatefulWidget {
 }
 
 class _RegisterFormState extends State<RegisterForm> {
-
   final _formKey = GlobalKey<FormState>();
   bool _autovalidate = false;
 
@@ -46,17 +52,25 @@ class _RegisterFormState extends State<RegisterForm> {
   final _emailFocus = FocusNode();
   final _passFocus = FocusNode();
 
+  RegisterBloc _bloc;
+
   @override
   void dispose() {
     _emailCtrl.dispose();
     _passCtrl.dispose();
     _emailFocus.dispose();
     _passFocus.dispose();
+    _bloc.dispose();
+    _bloc = null;
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    if (_bloc == null) {
+      _bloc = InjectorWidget.of(context).get();
+    }
+
     return Column(
       children: <Widget>[
         Form(
@@ -72,7 +86,7 @@ class _RegisterFormState extends State<RegisterForm> {
                   validator: validateEmail,
                   keyboardType: TextInputType.emailAddress,
                   decoration:
-                  InputDecoration(filled: true, labelText: 'Correo'),
+                      InputDecoration(filled: true, labelText: 'Correo'),
                   textInputAction: TextInputAction.next,
                   onFieldSubmitted: (v) {
                     changeFocus(context, _emailFocus, _passFocus);
@@ -86,8 +100,8 @@ class _RegisterFormState extends State<RegisterForm> {
                   focusNode: _passFocus,
                   validator: validatePass,
                   keyboardType: TextInputType.text,
-                  decoration: InputDecoration(
-                      filled: true, labelText: 'Contraseña'),
+                  decoration:
+                      InputDecoration(filled: true, labelText: 'Contraseña'),
                   textInputAction: TextInputAction.done,
                   obscureText: true,
                 ),
@@ -95,23 +109,80 @@ class _RegisterFormState extends State<RegisterForm> {
             ],
           ),
         ),
-        Spacer(),
-        Row(
-          children: <Widget>[
-            Expanded(
-              child: FlatButton(
-                  onPressed: () => Navigator.pop(context),
-                  child: Text(
-                    'Cancelar',
-                    style: TextStyle(color: Theme.of(context).accentColor),
-                  )),
-            ),
-            Expanded(
-              child: RaisedButton(onPressed: (){}, child: Text('Crear'), color: Theme.of(context).accentColor, textColor: Colors.white,),
-            )
-          ],
-        )
+        Expanded(
+          child: BlocBuilder(
+            bloc: _bloc,
+            builder: (ctx, state){
+
+              if(state is SuccessState){
+                onDidWidgetLoaded((){
+                  Navigator.pushReplacementNamed(context, MainPage.ROUTE);
+                });
+              }
+
+              return Column(
+                children: <Widget>[
+
+                  if(state is ErrorState)
+                    _errorMessage(),
+
+                  Spacer(),
+
+                  if(state is LoadingState)
+                    _loading(),
+
+                  if(!(state is LoadingState))
+                    _actions(context)
+
+                ],
+              );
+            },
+          ),
+        ),
       ],
     );
   }
+
+  Row _actions(BuildContext context) {
+    return Row(
+        children: <Widget>[
+          Expanded(
+            child: FlatButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text(
+                  'Cancelar',
+                  style: TextStyle(color: Theme.of(context).accentColor),
+                )),
+          ),
+          Expanded(
+            child: RaisedButton(
+              onPressed: () {
+                _bloc.dispatch(LoginEvent(_emailCtrl.text, _passCtrl.text));
+              },
+              child: Text('Crear'),
+              color: Theme.of(context).accentColor,
+              textColor: Colors.white,
+            ),
+          )
+        ],
+      );
+  }
+
+  Widget _errorMessage() {
+    return Padding(
+      padding: EdgeInsets.only(top: 16),
+      child: Text(
+        'Error al crear cuenta, intenta de nuevo',
+        style: TextStyle(color: Colors.red),
+      ),
+    );
+  }
+  
+  Widget _loading(){
+    return Align(
+      alignment: Alignment.centerRight,
+      child: CircularProgressIndicator(),
+    );
+  }
+  
 }

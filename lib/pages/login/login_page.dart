@@ -1,3 +1,4 @@
+import 'package:dependencies_flutter/dependencies_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:notas/pages/login/login_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -23,7 +24,7 @@ class _LoginPageState extends State<LoginPage> {
   final _emailFocus = FocusNode();
   final _passFocus = FocusNode();
 
-  final LoginBloc _bloc = LoginBloc();
+  LoginBloc _bloc;
 
   @override
   void dispose() {
@@ -32,11 +33,16 @@ class _LoginPageState extends State<LoginPage> {
     _emailFocus.dispose();
     _passFocus.dispose();
     _bloc.dispose();
+    _bloc = null;
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    if(_bloc == null){
+      _bloc = InjectorWidget.of(context).get();
+    }
+
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(16.0),
