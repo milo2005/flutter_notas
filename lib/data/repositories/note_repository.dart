@@ -10,7 +10,9 @@ class NoteRepository {
   Future add(Note note) async {
     final id = await _session.getId();
 
-    await Firestore.instance.document("notes/$id/items").setData(note.toJson());
+    await Firestore.instance.collection("notes/$id/items")
+        .document()
+        .setData(note.toJson());
   }
 
   Future remove(String idNote) async {
@@ -31,6 +33,15 @@ class NoteRepository {
     final id = await _session.getId();
 
     yield* Firestore.instance.collection('notes/$id/items')
+        .snapshots()
+        .map((v) => _processList(v.documents));
+  }
+
+  Stream<List<Note>> allByTag(String tag) async*{
+    final id = await _session.getId();
+
+    yield* Firestore.instance.collection('notes/$id/items')
+        .where("tag", isEqualTo: tag  )
         .snapshots()
         .map((v) => _processList(v.documents));
   }

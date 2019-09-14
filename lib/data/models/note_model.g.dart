@@ -12,6 +12,7 @@ Note _$NoteFromJson(Map<String, dynamic> json) {
     title: json['title'] as String,
     description: json['description'] as String,
     date: json['date'] == null ? null : DateTime.parse(json['date'] as String),
+    tag: json['tag'] as String,
   );
 }
 
@@ -20,4 +21,5 @@ Map<String, dynamic> _$NoteToJson(Note instance) => <String, dynamic>{
       'title': instance.title,
       'description': instance.description,
       'date': instance.date?.toIso8601String(),
+      'tag': instance.tag,
     };
