@@ -10,10 +10,7 @@ class AddPage extends StatelessWidget {
       appBar: AppBar(
         title: Text('Agregar Nota'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: AddPageForm(),
-      ),
+      body: AddPageForm(),
     );
   }
 }
@@ -46,43 +43,69 @@ class _AddPageFormState extends State<AddPageForm> {
   Widget build(BuildContext context) {
     return Column(
       children: <Widget>[
-        Form(
-          key: _key,
-          autovalidate: _autovalidate,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              TextFormField(
-                controller: _titleCtrl,
-                focusNode: _titleFocus,
-                validator: _validateTitle,
-                textInputAction: TextInputAction.next,
-                keyboardType: TextInputType.text,
-                decoration: InputDecoration(
-                    border: OutlineInputBorder(), labelText: 'Titulo'),
-                onFieldSubmitted: (v) {
-                  changeFocus(context, _titleFocus, _desFocus);
-                },
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 12),
-                child: TextFormField(
-                  controller: _desCtrl,
-                  focusNode: _desFocus,
-                  validator: _validateDes,
-                  textInputAction: TextInputAction.done,
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Form(
+            key: _key,
+            autovalidate: _autovalidate,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                TextFormField(
+                  controller: _titleCtrl,
+                  focusNode: _titleFocus,
+                  validator: _validateTitle,
+                  textInputAction: TextInputAction.next,
                   keyboardType: TextInputType.text,
-                  decoration:
-                  InputDecoration(
-                      border: OutlineInputBorder(), labelText: 'Descripción'),
+                  decoration: InputDecoration(
+                      border: OutlineInputBorder(), labelText: 'Titulo'),
+                  onFieldSubmitted: (v) {
+                    changeFocus(context, _titleFocus, _desFocus);
+                  },
                 ),
-              ),
-            ],
+                Padding(
+                  padding: EdgeInsets.only(top: 12),
+                  child: TextFormField(
+                    controller: _desCtrl,
+                    focusNode: _desFocus,
+                    validator: _validateDes,
+                    textInputAction: TextInputAction.done,
+                    keyboardType: TextInputType.text,
+                    decoration: InputDecoration(
+                        border: OutlineInputBorder(), labelText: 'Descripción'),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
         Spacer(),
-        _actions(),
+        _action(),
       ],
+    );
+  }
+
+  Widget _action() {
+    return Material(
+      child: Hero(
+        tag: 'btnAdd',
+        child: InkWell(
+          onTap: () {},
+          child: Container(
+            height: 65,
+            color: Theme.of(context).accentColor,
+            child: Center(
+              child: Text(
+                'AGREGAR',
+                style: Theme.of(context)
+                    .textTheme
+                    .button
+                    .copyWith(color: Colors.white),
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 
@@ -94,9 +117,7 @@ class _AddPageFormState extends State<AddPageForm> {
             onPressed: () {},
             child: Text(
               'Cancelar',
-              style: TextStyle(color: Theme
-                  .of(context)
-                  .accentColor),
+              style: TextStyle(color: Theme.of(context).accentColor),
             ),
           ),
         ),
@@ -104,9 +125,7 @@ class _AddPageFormState extends State<AddPageForm> {
           child: RaisedButton(
             onPressed: () {},
             child: Text('Agregar'),
-            color: Theme
-                .of(context)
-                .accentColor,
+            color: Theme.of(context).accentColor,
             textColor: Colors.white,
           ),
         )
@@ -124,9 +143,10 @@ class _AddPageFormState extends State<AddPageForm> {
   Widget _errorMessage(String msg) {
     return Padding(
       padding: EdgeInsets.all(11),
-      child: Text(msg, style: TextStyle(color: Theme
-          .of(context)
-          .errorColor),),
+      child: Text(
+        msg,
+        style: TextStyle(color: Theme.of(context).errorColor),
+      ),
     );
   }
 

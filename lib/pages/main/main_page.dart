@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:notas/data/models/note_model.dart';
 import 'package:notas/pages/add/add_page.dart';
 
 class MainPage extends StatefulWidget {
@@ -9,10 +10,14 @@ class MainPage extends StatefulWidget {
 }
 
 class _MainPageState extends State<MainPage> {
+
+  List<Note> _data = [];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
+        heroTag: 'btnAdd',
         onPressed: () {
           Navigator.pushNamed(context, AddPage.ROUTE);
         },
@@ -25,11 +30,12 @@ class _MainPageState extends State<MainPage> {
         title: Text("Mis Notas"),
       ),
       body: ListView.builder(
-          itemCount: 10, itemBuilder: (ctx, idx) => _itemNote(ctx)),
+          itemCount: _data.length,
+          itemBuilder: (ctx, idx) => _itemNote(ctx, _data[idx])),
     );
   }
 
-  Widget _itemNote(BuildContext context) {
+  Widget _itemNote(BuildContext context, Note note) {
     return Card(
       child: Stack(
         children: <Widget>[
@@ -46,17 +52,17 @@ class _MainPageState extends State<MainPage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Text(
-                  'Titulo',
+                  note.title,
                   style: Theme.of(context).textTheme.title,
                 ),
                 Text(
-                  'Fecha',
+                  note.date.toString(),
                   style: Theme.of(context).textTheme.caption,
                 ),
                 Padding(
                   padding: EdgeInsets.only(top: 10),
                   child: Text(
-                    'Descripcion ...',
+                    note.description,
                     style: Theme.of(context).textTheme.body1,
                   ),
                 )
