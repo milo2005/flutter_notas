@@ -21,12 +21,6 @@ class _MainPageState extends State<MainPage> {
   MainBloc _bloc;
 
   @override
-  void dispose() {
-    _bloc.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
 
     if(_bloc == null){
@@ -47,22 +41,19 @@ class _MainPageState extends State<MainPage> {
       appBar: AppBar(
         title: Text("Mis Notas"),
       ),
-      body: BlocBuilder(
-        bloc: _bloc,
-        builder: (ctx, state){
-          if(state is LoadingState){
-            return _loader();
-          }else if(state is ErrorState){
-            return _errorMsg('Error al recuperar las notas');
-          }else if(state is SuccessState){
-            _data = state.data;
-          }else if(state is InitialState){
-            onDidWidgetLoaded((){
-              _bloc.dispatch(MainEvents.READY);
-            });
-          }
-          return _list();
-        },
+      body: StreamBuilder(
+          initialData: [],
+          stream: _bloc.data,
+          builder: (ctx, data){
+            if(data.error){
+              return _errorMsg('Error al cargar las notas');
+            }else if(data.connectionState == ConnectionState.waiting){
+              return _loader();
+            }else{
+              _data = data.data;
+              return _list();
+            }
+          },
       ),
     );
   }

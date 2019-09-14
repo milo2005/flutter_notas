@@ -36,7 +36,8 @@ dependencies:
   firebase_core: ^0.4.0+9
   #Json
   json_annotation: ^3.0.0
-
+  #Rx
+  rxdart: ^0.22.2
 
 dev_dependencies:
   #Json

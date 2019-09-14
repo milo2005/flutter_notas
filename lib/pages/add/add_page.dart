@@ -95,11 +95,12 @@ class _AddPageFormState extends State<AddPageForm> {
           ),
         ),
         Expanded(
-          child: BlocBuilder(
-            bloc: _bloc,
+          child: StreamBuilder(
+            initialData: 0,
+            stream: _bloc.added,
             builder: (ctx, state){
 
-              if(state is SuccessState){
+              if(state.data == 1){
                 onDidWidgetLoaded((){
                   Navigator.pop(context);
                 });
@@ -107,18 +108,18 @@ class _AddPageFormState extends State<AddPageForm> {
 
               return Column(
                 children: <Widget>[
-                  if(state is LoadingState)
+                  if(state.connectionState == ConnectionState.waiting)
                     ...[
                       Spacer(),
                       _loader()
                     ],
-                  if(state is ErrorState)
+                  if(state.error)
                     ...[
                       _errorMessage('Error al Agregar, Intenta de nuevo'),
                       Spacer(),
                       _action()
                     ],
-                  if(state is InitialState)
+                  if(state.data == 0)
                     ...[
                       Spacer(),
                       _action()
@@ -138,11 +139,11 @@ class _AddPageFormState extends State<AddPageForm> {
         tag: 'btnAdd',
         child: InkWell(
           onTap: () {
-            _bloc.dispatch(AddEvent(Note(
+            _bloc.addNote.add(Note(
               title: _titleCtrl.text,
               description: _desCtrl.text,
               date: DateTime.now(),
-            )));
+            ));
           },
           child: Container(
             height: 65,
