@@ -30,7 +30,8 @@ class NoteRepository {
   Stream<List<Note>> all() async* {
     final id = await _session.getId();
 
-    yield* Firestore.instance.collection('notes/$id/items').snapshots()
+    yield* Firestore.instance.collection('notes/$id/items')
+        .snapshots()
         .map((v) => _processList(v.documents));
   }
 
