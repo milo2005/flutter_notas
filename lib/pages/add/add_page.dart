@@ -58,7 +58,8 @@ class _AddPageFormState extends State<AddPageForm> {
                 validator: _validateTitle,
                 textInputAction: TextInputAction.next,
                 keyboardType: TextInputType.text,
-                decoration: InputDecoration(border: OutlineInputBorder(), labelText: 'Titulo'),
+                decoration: InputDecoration(
+                    border: OutlineInputBorder(), labelText: 'Titulo'),
                 onFieldSubmitted: (v) {
                   changeFocus(context, _titleFocus, _desFocus);
                 },
@@ -72,35 +73,60 @@ class _AddPageFormState extends State<AddPageForm> {
                   textInputAction: TextInputAction.done,
                   keyboardType: TextInputType.text,
                   decoration:
-                      InputDecoration(border:OutlineInputBorder(), labelText: 'Descripción'),
+                  InputDecoration(
+                      border: OutlineInputBorder(), labelText: 'Descripción'),
                 ),
               ),
             ],
           ),
         ),
         Spacer(),
-        Row(
-          children: <Widget>[
-            Expanded(
-              child: FlatButton(
-                onPressed: () {},
-                child: Text(
-                  'Cancelar',
-                  style: TextStyle(color: Theme.of(context).accentColor),
-                ),
-              ),
-            ),
-            Expanded(
-              child: RaisedButton(
-                onPressed: () {},
-                child: Text('Agregar'),
-                color: Theme.of(context).accentColor,
-                textColor: Colors.white,
-              ),
-            )
-          ],
-        ),
+        _actions(),
       ],
+    );
+  }
+
+  Widget _actions() {
+    return Row(
+      children: <Widget>[
+        Expanded(
+          child: FlatButton(
+            onPressed: () {},
+            child: Text(
+              'Cancelar',
+              style: TextStyle(color: Theme
+                  .of(context)
+                  .accentColor),
+            ),
+          ),
+        ),
+        Expanded(
+          child: RaisedButton(
+            onPressed: () {},
+            child: Text('Agregar'),
+            color: Theme
+                .of(context)
+                .accentColor,
+            textColor: Colors.white,
+          ),
+        )
+      ],
+    );
+  }
+
+  Widget _loader() {
+    return Align(
+      alignment: Alignment.bottomRight,
+      child: CircularProgressIndicator(),
+    );
+  }
+
+  Widget _errorMessage(String msg) {
+    return Padding(
+      padding: EdgeInsets.all(11),
+      child: Text(msg, style: TextStyle(color: Theme
+          .of(context)
+          .errorColor),),
     );
   }
 
