@@ -10,6 +10,7 @@ class MainBloc extends Bloc<MainEvents, BaseState>{
 
   NoteRepository _repository;
   MainBloc(this._repository);
+  bool hola;
 
   @override
   BaseState get initialState => InitialState();
