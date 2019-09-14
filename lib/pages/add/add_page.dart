@@ -1,5 +1,12 @@
+import 'package:dependencies_flutter/dependencies_flutter.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:notas/data/models/user_task.dart';
+import 'package:notas/pages/add/add_bloc.dart';
+import 'package:notas/util/event_util.dart';
+import 'package:notas/util/state_util.dart';
 import 'package:notas/util/text_util.dart';
+import 'package:notas/util/widget_util.dart';
 
 class AddPage extends StatelessWidget {
   static const ROUTE = '/add';
@@ -10,10 +17,7 @@ class AddPage extends StatelessWidget {
       appBar: AppBar(
         title: Text('Agregar Nota'),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: AddPageForm(),
-      ),
+      body: AddPageForm(),
     );
   }
 }
@@ -33,8 +37,11 @@ class _AddPageFormState extends State<AddPageForm> {
   final _titleFocus = FocusNode();
   final _desFocus = FocusNode();
 
+  AddBloc _bloc;
+
   @override
   void dispose() {
+    _bloc.dispose();
     _titleCtrl.dispose();
     _desCtrl.dispose();
     _titleFocus.dispose();
@@ -44,61 +51,85 @@ class _AddPageFormState extends State<AddPageForm> {
 
   @override
   Widget build(BuildContext context) {
+    if (_bloc == null) {
+      _bloc = InjectorWidget.of(context).get();
+    }
     return Column(
       children: <Widget>[
-        Form(
-          key: _key,
-          autovalidate: _autovalidate,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              TextFormField(
-                controller: _titleCtrl,
-                focusNode: _titleFocus,
-                validator: _validateTitle,
-                textInputAction: TextInputAction.next,
-                keyboardType: TextInputType.text,
-                decoration: InputDecoration(border: OutlineInputBorder(), labelText: 'Titulo'),
-                onFieldSubmitted: (v) {
-                  changeFocus(context, _titleFocus, _desFocus);
-                },
-              ),
-              Padding(
-                padding: EdgeInsets.only(top: 12),
-                child: TextFormField(
-                  controller: _desCtrl,
-                  focusNode: _desFocus,
-                  validator: _validateDes,
-                  textInputAction: TextInputAction.done,
+        Padding(
+          padding: const EdgeInsets.all(11.0),
+          child: Form(
+            key: _key,
+            autovalidate: _autovalidate,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                TextFormField(
+                  controller: _titleCtrl,
+                  focusNode: _titleFocus,
+                  validator: _validateTitle,
+                  textInputAction: TextInputAction.next,
                   keyboardType: TextInputType.text,
-                  decoration:
-                      InputDecoration(border:OutlineInputBorder(), labelText: 'Descripción'),
+                  decoration: InputDecoration(
+                      border: OutlineInputBorder(), labelText: 'Titulo'),
+                  onFieldSubmitted: (v) {
+                    changeFocus(context, _titleFocus, _desFocus);
+                  },
                 ),
-              ),
-            ],
+                Padding(
+                  padding: EdgeInsets.only(top: 12),
+                  child: TextFormField(
+                    controller: _desCtrl,
+                    focusNode: _desFocus,
+                    validator: _validateDes,
+                    textInputAction: TextInputAction.done,
+                    keyboardType: TextInputType.text,
+                    decoration: InputDecoration(
+                        border: OutlineInputBorder(), labelText: 'Descripción'),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
         Spacer(),
-        Row(
-          children: <Widget>[
-            Expanded(
-              child: FlatButton(
-                onPressed: () {},
-                child: Text(
-                  'Cancelar',
-                  style: TextStyle(color: Theme.of(context).accentColor),
+        BlocBuilder(
+          bloc: _bloc,
+          builder: (ctx, state) {
+            if (state is SuccessState) {
+              onDidWidgetLoaded(() {
+                Navigator.pop(context);
+              });
+            }
+
+            return Hero(
+              tag: 'fab',
+              child: Material(
+                child: InkWell(
+                  onTap: () {
+                    _bloc.dispatch(SaveEvent(
+                        data: UserTask(
+                            title: _titleCtrl.text,
+                            description: _desCtrl.text,
+                            date: DateTime.now())));
+                  },
+                  child: Container(
+                    height: 60,
+                    color: Theme.of(context).accentColor,
+                    child: Center(
+                      child: Text(
+                        'AGREGAR',
+                        style: Theme.of(context)
+                            .textTheme
+                            .button
+                            .copyWith(color: Colors.white),
+                      ),
+                    ),
+                  ),
                 ),
               ),
-            ),
-            Expanded(
-              child: RaisedButton(
-                onPressed: () {},
-                child: Text('Agregar'),
-                color: Theme.of(context).accentColor,
-                textColor: Colors.white,
-              ),
-            )
-          ],
+            );
+          },
         ),
       ],
     );
